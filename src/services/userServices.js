@@ -1,31 +1,35 @@
 import db from "../models/index";
-import bcrypt from 'bcryptjs';
+import bcrypt, { hash } from 'bcryptjs';
 
-let handleUserLogin = (email, password) => {
-    return new Promise(async (resolve, reject) => {
+let handleUserLogin = async (email, password) => {
+    return new Promise( async (resolve, reject) => {
         try {
-            let userData = {};
+            let userData = { };
 
-            let isExist = await checkUserEmail(email)
+            let isExist = await checkUserEmail(email);
             if(isExist){
                 let user =  await db.User.findOne({
-                    where: {email: email}
+                    attributes: ['email','roleId', 'password'],
+                    where: { email : email },
+                    raw: true
+                
                 });
                 if(user){
-                    // bcrypt.compareSync("B4c0/\/", hash); // true
-                    // bcrypt.compareSync("not_bacon", hash); // false
-                    let check = await bcrypt.compareSync( password, user.password);
+                    let check = await bcrypt.compareSync(password, user.password);
+                    
                     if(check){
                         userData.errCode = 0;
-                        userData.errMessage = 'Ok';
+                        userData.errMessage = 'Ok',
+                        console.log(user);
+                        delete user.password;
                         userData.user = user;
                     }else{
                         userData.errCode = 3;
-                        userData.errMessage = 'Wrong password!'
+                        userData.errMessage = 'Wrong password!';
                     }
                 }else{
                     userData.errCode = 2;
-                    userData.errMessage = `User's not found`;
+                    userData.errMessage = 'Users not found';
                 }
                 
             }else{

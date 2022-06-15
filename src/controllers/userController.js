@@ -1,4 +1,4 @@
-import userServices from '../services/userServices'
+import userServices from "../services/userServices";
 
 let handleLogin = async (req, res) => {
     let email = req.body.email;
@@ -15,8 +15,8 @@ let handleLogin = async (req, res) => {
     let userData = await userServices.handleUserLogin(email, password);
     return res.status(200).json({
         errCode: userData.errCode,
-        errMessage: userData.errMessage,
-        userData,
+        message: userData.errMessage,
+        user: userData.user ? userData.user: {}
     })
 }
 
