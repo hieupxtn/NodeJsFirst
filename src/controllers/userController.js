@@ -2,7 +2,6 @@ import userServices from "../services/userServices";
 
 let handleLogin = async (req, res) => {
     let email = req.body.email;
-    console.log('your email: ' + email)
     let password = req.body.password;
     
     if(!email || !password){
@@ -11,15 +10,16 @@ let handleLogin = async (req, res) => {
             message: 'Missing inputs parameter!'
         })
     }
-
+    
     let userData = await userServices.handleUserLogin(email, password);
+    console.log(userData)
     return res.status(200).json({
         errCode: userData.errCode,
         message: userData.errMessage,
-        user: userData.user ? userData.user: {}
+        user: userData.user ? userData.user: {},
     })
 }
 
 module.exports = {
-    handleLogin: handleLogin,
+    handleLogin: handleLogin
 }
