@@ -92,8 +92,7 @@ let updateUserData = (data) =>{
             }
 
         } catch (e) {
-            console.log(e)
-        
+            reject(e)
         }
     })
 }
